@@ -242,144 +242,7 @@ Create the first key in the admin console before enabling `require_key`.
 
 ---
 
-## 07 — Step-by-Step Installation
-
-### Requirements
-
-- Python 3.10 or newer
-- A Linux VPS, Python host, or local machine
-- A static host for the frontend
-
-### Step 1 — Extract the server
-
-```bash
-unzip vextik-wispbyte.zip -d vextik
-cd vextik
-```
-
-### Step 2 — Install dependencies
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-Windows activation:
-
-```bash
-.venv\Scripts\activate
-```
-
-### Step 3 — Set the admin password
-
-Open `server/main.py` and change:
-
-```python
-ADMIN_PASSWORD = "your-strong-password"
-```
-
-Do this **before** the first run. The server re-applies this constant at startup.
-
-### Step 4 — Start the server
-
-```bash
-python server/main.py
-```
-
-Default address:
-
-```text
-http://0.0.0.0:13004
-```
-
-On first run the server prints:
-
-- The secret admin path
-- The generated signing key
-- The admin password
-
-Example admin URL:
-
-```text
-https://your-domain.com/<secret-path>/admin
-```
-
-### Step 5 — Deploy the frontend
-
-```bash
-unzip vextik-pages.zip -d public
-```
-
-Edit `public/source.html`:
-
-```js
-var CFG = {
-  base: 'https://your-server.example.com',
-  key: '',
-  timeout: 35000,
-  historyKey: 'vextik.history.v1',
-  maxHistory: 30
-};
-```
-
-Set `base` to your backend URL. Leave `key` empty unless `require_key` is enabled.
-
-Rename the file and deploy:
-
-```bash
-mv public/source.html public/index.html
-```
-
-### Step 6 — Set the public base URL
-
-In the admin console, open **Settings** and set **Public Base URL** to your HTTPS origin:
-
-```text
-https://your-domain.com
-```
-
-This keeps generated download links correct behind reverse proxies.
-
-### Step 7 — Lock down production
-
-- Use HTTPS.
-- Change `api.allowed_origins` from `["*"]` to your frontend origin.
-- Restrict the admin path by IP or VPN if possible.
-- Keep `data.db` and `config.json` private.
-- Add a process supervisor and firewall.
-
----
-
-## 08 — Configuration
-
-Edit `server/config.json` or use the admin console.
-
-| Key | Default | Meaning |
-| --- | --- | --- |
-| `system.status` | `online` | `online` or `maintenance` |
-| `system.maintenance_message` | Built in | Message shown during maintenance |
-| `system.announcement` | `""` | Website banner |
-| `download.enabled` | `true` | Master download switch |
-| `download.proxy_mode` | `true` | Stream through server or use direct CDN links |
-| `download.max_per_minute` | `10` | Requests per IP per minute |
-| `download.max_per_day` | `100` | Requests per IP per day |
-| `download.global_concurrency` | `10` | Simultaneous extraction jobs |
-| `download.session_ttl` | `300` | Session lifetime in seconds |
-| `download.download_ttl` | `600` | Download token lifetime in seconds |
-| `api.enabled` | `true` | Public API switch |
-| `api.base_url` | `""` | Canonical public origin |
-| `api.require_key` | `false` | Require API keys |
-| `api.allowed_origins` | `["*"]` | CORS allowlist |
-| `features.downloader` | `true` | Website downloader |
-| `features.public_api` | `true` | Public API |
-| `features.photos` | `true` | Slideshow photos |
-| `features.audio` | `true` | Audio downloads |
-| `features.cover` | `true` | Cover downloads |
-
----
-
-## 09 — API Reference
+## 07 — API Reference
 
 Base URL: your public server origin.
 
@@ -455,27 +318,7 @@ Common codes: `INVALID_LINK`, `PRIVATE_VIDEO`, `NOT_FOUND`, `RATE_LIMITED`, `TOK
 
 ---
 
-## 10 — Admin Console
-
-Open the secret path printed at startup:
-
-```text
-https://your-domain.com/<secret-path>/admin
-```
-
-| Section | Capabilities |
-| --- | --- |
-| Dashboard | Requests, cache hit rate, users, errors, latency, RAM, CPU, uptime, traffic charts, extractor health |
-| API Keys | Create, copy, rename, enable, disable, expire, delete |
-| Settings | Proxy mode, cache TTL, log retention, public URL, maintenance, announcement, contacts |
-| Logs | Filter, search, export CSV |
-| Maintenance | Vacuum database, download backup, delete old logs |
-
-Admin sessions last 8 hours. State-changing requests require CSRF validation. Five failed logins lock the IP for 15 minutes.
-
----
-
-## 11 — Security
+## 08 — Security
 
 - Change `ADMIN_PASSWORD` in `server/main.py` before the first run.
 - Keep `data.db` and `config.json` out of Git.
@@ -501,7 +344,7 @@ __pycache__/
 
 ---
 
-## 12 — Purchase & Contact
+## 09 — Purchase & Contact
 
 <div align="center">
 
